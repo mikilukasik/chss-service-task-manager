@@ -29,7 +29,7 @@ export const createChildTasksHandler = ({ taskSocket }) => [
 
     if (updatedParentTask) taskSocket.emit('taskChanged', updatedParentTask);
 
-    taskSocket.emit('taskListChanged');
+    taskSocket.emit(`childTaskListChangedFor${parentId}`);
     comms.send(childTaskIds);
 
     tasksAdded(childTasks);

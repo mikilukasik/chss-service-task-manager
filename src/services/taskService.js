@@ -24,7 +24,8 @@ export const createTask = async (params, rootParams) => {
   const createdTask = await insertTask(task);
 
   const taskSocket = await getTaskSocket();
-  taskSocket.emit('taskListChanged');
+
+  taskSocket.emit(task.parentId ? `childTaskListChangedFor${task.parentId}` : 'taskListChanged');
 
   taskAdded(createdTask);
   return createdTask;
