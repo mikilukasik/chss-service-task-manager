@@ -73,6 +73,11 @@ export const bulkUpdateTasks = async (bulkUpdates) => {
   return tasksCollection.bulkWrite(bulkUpdates);
 };
 
+export const getAggregationCursor = async (pipeline) => {
+  const tasksCollection = await getCollection('tasks');
+  return tasksCollection.aggregate(pipeline);
+};
+
 export const getTasks = async (filters = {}, projection = {}) => {
   const tasksCollection = await getCollection('tasks');
   const response = await tasksCollection.find(filters).project(projection).toArray();

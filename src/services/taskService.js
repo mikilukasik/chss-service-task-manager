@@ -1,5 +1,5 @@
 import { getTaskSocket } from '../routes/routes';
-import { findAndUpdateTask, insertTask, updateTask } from './mongoService';
+import { findAndUpdateTask, getTaskDefinition, insertTask, updateTask } from './mongoService';
 import uuid from 'uuid-random';
 import { taskAdded } from './taskAwaiterService';
 
@@ -20,11 +20,16 @@ export const sendTask = async ({ task, comms }) => {
 };
 
 export const createTask = async (params, rootParams) => {
-  const task = Object.assign({ _id: uuid(), command: params.command, params, status: 'ready' }, rootParams);
+  const { infinite } = await getTaskDefinition({ command: params.command });
+
+  const task = Object.assign(
+    { _id: uuid(), command: params.command, params, status: 'ready' },
+    rootParams,
+    infinite ? { infinite } : {},
+  );
   const createdTask = await insertTask(task);
 
   const taskSocket = await getTaskSocket();
-
   taskSocket.emit(task.parentId ? `childTaskListChangedFor${task.parentId}` : 'taskListChanged');
 
   taskAdded(createdTask);
