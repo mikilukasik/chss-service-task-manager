@@ -1,1 +1,1 @@
-/home/miki/chss/msg
+/Users/miki/dev/petproject/chss/msg
